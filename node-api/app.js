@@ -20,6 +20,12 @@ app.use((req, res, next) => {
 
 app.use(postRouter);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`server running at http://localhost:${PORT}`);
+});
+const io = require("socket.io")(server);
+
+io.on("connection", (socket) => {
+  console.log("client connecting");
+  // ...
 });
