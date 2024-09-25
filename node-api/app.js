@@ -19,7 +19,11 @@ app.use((req, res, next) => {
 });
 
 app.use(postRouter);
-
+app.use((error, req, res, next) => {
+  console.log("error in app.js", error);
+  res.status(500).json({ error: `Server Error, ${error}` });
+  next();
+});
 const server = app.listen(PORT, () => {
   console.log(`server running at http://localhost:${PORT}`);
 });
