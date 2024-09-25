@@ -1,7 +1,7 @@
 const express = require("express");
 const postRouter = express.Router();
 const { v4: uuidv4 } = require("uuid");
-
+const io = require("../socket");
 let mockPostList = [];
 postRouter.get("/post-list", (req, res, next) => {
   res.status(200).json({
@@ -25,6 +25,10 @@ postRouter.post("/add-post", (req, res, next) => {
     description: description,
   };
   mockPostList.push(postInfo);
+  io.getIO().emit("posts", {
+    action: "create",
+    post: postInfo,
+  });
   res.status(200).json({ message: "Post Created!", post: postInfo });
 });
 

@@ -1,6 +1,8 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Post, { PostInfo } from "./Post";
+import { io } from "socket.io-client";
+import useSWR from "swr";
 
 // const mockPostList = [
 //   {
@@ -17,8 +19,43 @@ import Post, { PostInfo } from "./Post";
 //     url: "#2",
 //   },
 // ];
+export type GetPostListRes = {
+  data: PostInfo[];
+};
+export const getPostList = async () => {
+  try {
+    const res = await fetch("http://localhost:8000/post-list");
+    if (!res.ok) {
+      throw new Error("Get post list Response error.");
+    }
+    const getPostListRes = (await res.json()) as GetPostListRes;
+    return getPostListRes.data;
+  } catch (err) {
+    console.log("Get post list err:", err);
+    return [];
+  }
+};
 
-const PostList = ({ postList }: { postList: PostInfo[] }) => {
+const PostList = () => {
+  const {
+    data: postList,
+    //  error,
+    isValidating,
+    mutate,
+  } = useSWR("/post-list", getPostList, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
+  const socket = io("http://localhost:8000");
+  socket.on("posts", (data) => {
+    if (data.action === "create") {
+      mutate();
+    } else if (data.action === "update") {
+      console.log("update");
+    } else if (data.action === "delete") {
+      console.log("delete");
+    }
+  });
   return (
     <section className="flex flex-col gap-4">
       {postList?.map((postInfo) => {
