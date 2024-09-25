@@ -13,6 +13,7 @@ postRouter.post("/add-post", (req, res, next) => {
   const title = req.body.title;
   const description = req.body.description;
   const link = req.body.link;
+  console.log("link", link);
   if (!title || !link) {
     res.status(400).json({ error: "title and link is required" });
   }

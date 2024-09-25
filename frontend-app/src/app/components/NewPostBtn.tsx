@@ -154,7 +154,7 @@ const NewPostBtn = () => {
             </div>
             <div>
               <label
-                htmlFor="url"
+                htmlFor="link"
                 className="block text-lg font-medium text-gray-700"
               >
                 Link:
