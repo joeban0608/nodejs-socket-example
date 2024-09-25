@@ -13,6 +13,10 @@ postRouter.post("/add-post", (req, res, next) => {
   const title = req.body.title;
   const description = req.body.description;
   const content = req.body.content;
+  if (!title || !content) {
+    res.status(400).json({ error: "title and content is required" });
+  }
+
   const postInfo = {
     id: uuidv4(),
     title: title,
