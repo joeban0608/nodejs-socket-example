@@ -68,20 +68,19 @@ const NewPostBtn = () => {
     e.preventDefault();
     setIsSubmt(true);
   };
-
-  const onFailed = (err: string) => {
-    setError(err);
-    setIsSubmt(false);
+  const onFailed = async (err: string) => {
+    await setError(err);
+    await setIsSubmt(false);
   };
 
-  const onSuccess = () => {
+  const onSuccess = async () => {
     const closeModelDom = closeModalRef.current;
     if (closeModelDom) {
-      closeModelDom.click();
+      await closeModelDom.click();
     }
-    setFormData(initialFormData);
-    setIsSubmt(false);
-    setError("");
+    await setFormData(initialFormData);
+    await setError("");
+    await setIsSubmt(false);
     alert("Success to create post!");
   };
 
