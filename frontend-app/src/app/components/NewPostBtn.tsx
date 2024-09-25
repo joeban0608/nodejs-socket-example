@@ -66,15 +66,15 @@ const NewPostBtn = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log("in handleSubmit");
     setIsSubmt(true);
   };
-  const onFailed = async (err: string) => {
-    await setError(err);
+
+  const onFailed = (err: string) => {
+    setError(err);
     setIsSubmt(false);
   };
 
-  const onSuccess = async () => {
+  const onSuccess = () => {
     const closeModelDom = closeModalRef.current;
     if (closeModelDom) {
       closeModelDom.click();
