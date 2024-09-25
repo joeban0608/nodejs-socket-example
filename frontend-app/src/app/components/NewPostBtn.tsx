@@ -6,7 +6,7 @@ import useSWR from "swr";
 interface FormData {
   title: string;
   description: string;
-  content: string;
+  link: string;
 }
 
 type PosAddPostProps = {
@@ -49,7 +49,7 @@ const postAddPost = async ({
 const initialFormData = {
   title: "",
   description: "",
-  content: "",
+  link: "",
 };
 const NewPostBtn = () => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
@@ -113,7 +113,7 @@ const NewPostBtn = () => {
       <input type="checkbox" id="form_modal" className="modal-toggle" />
       <div className="modal" role="dialog">
         <div className="modal-box">
-          {/* modal content */}
+          {/* modal link */}
 
           <h1 className="text-3xl font-bold mb-6 text-center">
             Submit Your Post
@@ -154,16 +154,17 @@ const NewPostBtn = () => {
             </div>
             <div>
               <label
-                htmlFor="content"
+                htmlFor="url"
                 className="block text-lg font-medium text-gray-700"
               >
-                Content:
+                Link:
               </label>
-              <textarea
-                value={formData.content}
+              <input
+                type="url"
+                value={formData.link}
                 onChange={handleChange}
-                id="content"
-                name="content"
+                id="link"
+                name="link"
                 // required
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />

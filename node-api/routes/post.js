@@ -12,15 +12,15 @@ postRouter.get("/post-list", (req, res, next) => {
 postRouter.post("/add-post", (req, res, next) => {
   const title = req.body.title;
   const description = req.body.description;
-  const content = req.body.content;
-  if (!title || !content) {
-    res.status(400).json({ error: "title and content is required" });
+  const link = req.body.link;
+  if (!title || !link) {
+    res.status(400).json({ error: "title and link is required" });
   }
 
   const postInfo = {
     id: uuidv4(),
     title: title,
-    content: content,
+    link: link,
     description: description,
   };
   mockPostList.push(postInfo);
@@ -31,7 +31,7 @@ postRouter.put("/update-post/:id", (req, res, next) => {
   const pid = req.params.id;
   const updatedTitle = req.body.title;
   const updatedDescription = req.body.description;
-  const updatedContent = req.body.content;
+  const updatedContent = req.body.link;
 
   // 遍歷陣列，找到對應的 post 並修改其屬性
   mockPostList.forEach((postInfo) => {
@@ -42,13 +42,13 @@ postRouter.put("/update-post/:id", (req, res, next) => {
 
     postInfo.title = updatedTitle;
     postInfo.description = updatedDescription;
-    postInfo.content = updatedContent;
+    postInfo.link = updatedContent;
   });
 
   const updatePostInfo = {
     id: pid,
     title: updatedTitle,
-    content: updatedContent,
+    link: updatedContent,
     description: updatedDescription,
   };
 
