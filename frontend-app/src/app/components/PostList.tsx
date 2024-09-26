@@ -53,6 +53,7 @@ const PostList = () => {
     } else if (data.action === "update") {
       mutate();
     } else if (data.action === "delete") {
+      mutate();
       console.log("delete");
     }
   });

@@ -77,6 +77,10 @@ postRouter.delete("/delete-post/:id", (req, res, next) => {
     res.status(400).json({ error: "Failed to find post." });
     return;
   }
+  io.getIO().emit("posts", {
+    action: "delete",
+    post: { id: pid },
+  });
 
   mockPostList = mockPostList.filter((postInfo) => postInfo.id !== pid);
 
