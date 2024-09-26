@@ -1,6 +1,12 @@
 "use client";
 
-import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import SubmitBtn from "./SubmitBtn";
 import { PostInfo } from "./Post";
 import useSWR from "swr";
@@ -92,7 +98,7 @@ const EditPostBtn = (postInfo: PostInfo) => {
     //  error,
     isValidating,
   } = useSWR(
-    isSubmit && postInfo.id ? ["/edit-post"] : null,
+    isSubmit && postInfo.id ? ["/edit-post", postInfo.id] : null,
     () =>
       putEditPost({
         formData: formData,
@@ -105,17 +111,25 @@ const EditPostBtn = (postInfo: PostInfo) => {
       revalidateOnReconnect: false,
     }
   );
+  useEffect(() => {
+    setFormData({
+      title: postInfo.title,
+      description: postInfo.description,
+      link: postInfo.link,
+    });
+  }, [postInfo]);
+  const editPostFormModalID = `edit_post_form_modal_${postInfo.id}`;
   return (
     <>
       {/* The button to open modal */}
-      <label htmlFor="edit_post_form_modal" className=" btn btn-sm">
+      <label htmlFor={editPostFormModalID} className=" btn btn-sm">
         Edit
       </label>
 
       {/* Put this part before </body> tag */}
       <input
         type="checkbox"
-        id="edit_post_form_modal"
+        id={editPostFormModalID}
         className="modal-toggle"
       />
       <div className="modal" role="dialog">
@@ -177,16 +191,13 @@ const EditPostBtn = (postInfo: PostInfo) => {
               />
             </div>
             {error && <p className="py-2 text-red-500">{error}</p>}
-            <SubmitBtn
-              isValidating={isValidating}
-              submitBtnText="Create Post"
-            />
+            <SubmitBtn isValidating={isValidating} submitBtnText="Edit Post" />
           </form>
         </div>
         <label
           ref={closeModalRef}
           className="modal-backdrop"
-          htmlFor="edit_post_form_modal"
+          htmlFor={editPostFormModalID}
         >
           Close
         </label>

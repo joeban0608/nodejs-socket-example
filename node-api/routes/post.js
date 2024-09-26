@@ -40,14 +40,18 @@ postRouter.put("/edit-post/:id", (req, res, next) => {
 
   // 遍歷陣列，找到對應的 post 並修改其屬性
   mockPostList.forEach((postInfo) => {
-    if (postInfo.id !== pid) {
+    const postExists = mockPostList.some((postInfo) => postInfo.id === pid);
+
+    if (!postExists) {
       res.status(400).json({ error: "Failed to find post." });
-      next();
+      return;
     }
 
-    postInfo.title = updatedTitle;
-    postInfo.description = updatedDescription;
-    postInfo.link = updatedContent;
+    if (postInfo.id === pid) {
+      postInfo.title = updatedTitle;
+      postInfo.description = updatedDescription;
+      postInfo.link = updatedContent;
+    }
   });
 
   const updatePostInfo = {
@@ -63,16 +67,16 @@ postRouter.put("/edit-post/:id", (req, res, next) => {
 
   res.status(200).json({ message: "Post Updated!", post: updatePostInfo });
 });
+
 postRouter.delete("/delete-post/:id", (req, res, next) => {
   const pid = req.params.id;
 
-  // 遍歷陣列，找到對應的 post 並修改其屬性
-  mockPostList.forEach((postInfo) => {
-    if (postInfo.id !== pid) {
-      res.status(400).json({ error: "Failed to find post." });
-      next();
-    }
-  });
+  const postExists = mockPostList.some((postInfo) => postInfo.id === pid);
+
+  if (!postExists) {
+    res.status(400).json({ error: "Failed to find post." });
+    return;
+  }
 
   mockPostList = mockPostList.filter((postInfo) => postInfo.id !== pid);
 
