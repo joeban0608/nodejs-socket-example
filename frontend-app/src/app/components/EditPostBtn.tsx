@@ -43,16 +43,16 @@ const putEditPost = async ({
     if (!res.ok) {
       const errorRes = await res.json();
       if (errorRes.error) throw new Error(errorRes.error);
-      throw new Error("add post response err");
+      throw new Error("edit post response err");
     }
-    const addPostRes = await res.json();
-    if (addPostRes.error) {
-      throw new Error(addPostRes.error);
+    const editPostRes = await res.json();
+    if (editPostRes.error) {
+      throw new Error(editPostRes.error);
     }
     onSuccess();
-    return addPostRes;
+    return editPostRes;
   } catch (err) {
-    console.log("add post err:", err.message);
+    console.log("edit post err:", err.message);
     onFailed(err.message);
     return { error: err.message };
   }
