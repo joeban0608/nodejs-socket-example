@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import EditPostBtn from "./EditPostBtn";
 
 export interface PostInfo {
   id: string;
@@ -8,22 +9,25 @@ export interface PostInfo {
   link: string;
 }
 
-const Post = ({ id, title, description, link }: PostInfo) => {
+const Post = (postInfo: PostInfo) => {
   return (
     <div className="card bg-slate-400 shadow-xl w-full">
       <div className="card-body">
-        <Link href={link ? link : `#${id}`} className="group">
+        <Link href={postInfo.link ? postInfo.link : `#${postInfo.id}`} className="group">
           {/* 標題 */}
           <h1 className="text-xl font-bold text-indigo-600 group-hover:text-indigo-700 transition-colors duration-300">
-            {title}
+            {postInfo.title}
           </h1>
 
           {/* 描述 */}
           <p className="text-indigo-500 group-hover:text-indigo-600 transition-colors duration-300">
-            {description}
+            {postInfo.description}
           </p>
         </Link>
-        <p className="font-serif font-semibold">Article ID : {id}</p>
+        <p className="font-serif font-semibold">Article ID : {postInfo.id}</p>
+        <div className="flex justify-end pt-4">
+          <EditPostBtn {...postInfo} />
+        </div>
       </div>
     </div>
   );

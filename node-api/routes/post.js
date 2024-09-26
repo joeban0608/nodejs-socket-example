@@ -32,7 +32,7 @@ postRouter.post("/add-post", (req, res, next) => {
   res.status(200).json({ message: "Post Created!", post: postInfo });
 });
 
-postRouter.put("/update-post/:id", (req, res, next) => {
+postRouter.put("/edit-post/:id", (req, res, next) => {
   const pid = req.params.id;
   const updatedTitle = req.body.title;
   const updatedDescription = req.body.description;
@@ -56,6 +56,10 @@ postRouter.put("/update-post/:id", (req, res, next) => {
     link: updatedContent,
     description: updatedDescription,
   };
+  io.getIO().emit("posts", {
+    action: "update",
+    post: updatePostInfo,
+  });
 
   res.status(200).json({ message: "Post Updated!", post: updatePostInfo });
 });

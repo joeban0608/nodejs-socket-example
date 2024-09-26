@@ -51,7 +51,7 @@ const PostList = () => {
     if (data.action === "create") {
       mutate();
     } else if (data.action === "update") {
-      console.log("update");
+      mutate();
     } else if (data.action === "delete") {
       console.log("delete");
     }

@@ -1,33 +1,39 @@
 "use client";
-import { ChangeEvent, FormEvent, useRef, useState } from "react";
-import useSWR from "swr";
+
+import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
 import SubmitBtn from "./SubmitBtn";
+import { PostInfo } from "./Post";
+import useSWR from "swr";
 
 interface FormData {
   title: string;
   description: string;
   link: string;
 }
-
-type PostAddPostProps = {
+type PutEditPostProps = {
   formData: FormData;
   onSuccess: () => void;
   onFailed: (err: string) => void;
+  id: string;
 };
-const postAddPost = async ({
+const putEditPost = async ({
   formData,
   onSuccess,
   onFailed,
-}: PostAddPostProps) => {
+  id,
+}: PutEditPostProps) => {
   try {
     const requestOptions = {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
     };
-    const res = await fetch("http://localhost:8000/add-post", requestOptions);
+    const res = await fetch(
+      `http://localhost:8000/edit-post/${id}`,
+      requestOptions
+    );
     if (!res.ok) {
       const errorRes = await res.json();
       if (errorRes.error) throw new Error(errorRes.error);
@@ -45,14 +51,12 @@ const postAddPost = async ({
     return { error: err.message };
   }
 };
-
-const initialFormData = {
-  title: "",
-  description: "",
-  link: "",
-};
-
-const NewPostBtn = () => {
+const EditPostBtn = (postInfo: PostInfo) => {
+  const initialFormData = {
+    title: postInfo.title,
+    description: postInfo.description,
+    link: postInfo.link,
+  };
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [isSubmit, setIsSubmt] = useState(false);
   const [error, setError] = useState("");
@@ -64,7 +68,6 @@ const NewPostBtn = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmt(true);
@@ -82,38 +85,37 @@ const NewPostBtn = () => {
     await setFormData(initialFormData);
     await setError("");
     await setIsSubmt(false);
-    alert("Success to create post!");
+    alert("Success to Update post!");
   };
-
   const {
     // data,
     //  error,
     isValidating,
   } = useSWR(
-    isSubmit ? ["/add-post"] : null,
+    isSubmit && postInfo.id ? ["/edit-post"] : null,
     () =>
-      postAddPost({
+      putEditPost({
         formData: formData,
         onSuccess,
         onFailed,
+        id: postInfo.id,
       }),
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
     }
   );
-
   return (
     <>
       {/* The button to open modal */}
-      <label htmlFor="create_post_form_modal" className="btn">
-        New Post
+      <label htmlFor="edit_post_form_modal" className=" btn btn-sm">
+        Edit
       </label>
 
       {/* Put this part before </body> tag */}
       <input
         type="checkbox"
-        id="create_post_form_modal"
+        id="edit_post_form_modal"
         className="modal-toggle"
       />
       <div className="modal" role="dialog">
@@ -121,7 +123,7 @@ const NewPostBtn = () => {
           {/* modal link */}
 
           <h1 className="text-3xl font-bold mb-6 text-center">
-            Submit Your Post
+            Edit Your Post
           </h1>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -184,7 +186,7 @@ const NewPostBtn = () => {
         <label
           ref={closeModalRef}
           className="modal-backdrop"
-          htmlFor="create_post_form_modal"
+          htmlFor="edit_post_form_modal"
         >
           Close
         </label>
@@ -193,4 +195,4 @@ const NewPostBtn = () => {
   );
 };
 
-export default NewPostBtn;
+export default EditPostBtn;
